@@ -1,0 +1,11 @@
+* {
+  padding: 0px;
+  margin: 0px;
+  font-size: 1rem;
+  box-sizing: content-box;
+
+  /* Debugging */
+  border-color: red;
+  border-style: solid;
+  border-width: 1px;
+}
