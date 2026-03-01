@@ -9,4 +9,7 @@ export default defineConfig([
     extends: ["js/recommended"],
     languageOptions: { globals: globals.browser },
   },
+  {
+    ignores: ["webpack.config.js"]
+  },
 ]);

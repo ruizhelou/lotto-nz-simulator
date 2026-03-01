@@ -3,9 +3,86 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Lotto Simulator</title>
   </head>
   <body>
-    <div>hello world</div>
+    <header>
+      <h1>Lotto Simulator</h1>
+      <img src="./icons/lotto.png" alt="Lotto icon">
+    </header>
+
+    <main class="main-content">
+      <aside class="card">
+        <h2>Play Summary</h2>
+        <ul class="play-summary">
+        </ul>
+        <form action="" method="POST" class="line-selector">
+          <button type="submit" class="buy-button">Buy</button>
+          <select id="line-purchase-dropdown" name="line-purchase-dropdown" class="line-dropdown" aria-label="Select lotto line">
+            <option value="1">1 line</option>
+            <option value="4">4 lines</option>
+            <option value="8">8 lines</option>
+            <option value="10">10 lines</option>
+            <option value="15">15 lines</option>
+            <option value="20">20 lines</option>
+            <option value="100">100 lines</option>
+            <option value="100000">100,000 lines</option>
+            <option value="1000000">1,000,000 lines</option>
+          </select>
+        </form>
+      </aside>
+      
+      <div class="play-area">
+        <section class="lotto-play card">
+          <h2>Your Numbers</h2>
+          <form action="" method="POST" class="line-selector">
+            <button type="submit" class="play-button">Play</button>
+            <select id="line-play-dropdown" name="line-play-dropdown" class="line-dropdown" aria-label="Select lotto line">
+              <option value="1">1 line</option>
+              <option value="4">4 lines</option>
+              <option value="8">8 lines</option>
+              <option value="10">10 lines</option>
+              <option value="15">15 lines</option>
+              <option value="20">20 lines</option>
+              <option value="100">100 lines</option>
+              <option value="100000">100,000 lines</option>
+              <option value="1000000">1,000,000 lines</option>
+            </select>
+          </form>
+          <div class="ball-container">
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="bonus"><div class="ball"></div></div>
+          </div>
+        </section>
+
+        <section class="lotto-result card">
+          <div class="result-header">
+            <h2>Winning Numbers</h2>
+            <button class="shuffle-button">Shuffle</button>
+          </div>
+          
+          <div class="ball-container">
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="bonus"><div class="ball"></div></div>
+          </div>
+        </section>
+
+        <section class="outcome"></section>
+      </div>
+      
+    </main>
   </body>
 </html>
