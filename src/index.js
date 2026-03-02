@@ -229,16 +229,6 @@ function shake(domElement, milliseconds) {
     )
 }
 
-const buyButton = document.querySelector('.buy-button')
-buyButton.addEventListener('click', event => {
-    event.preventDefault()
-    const linePurchaseDropdownValue = parseInt(document.querySelector('#line-purchase-dropdown').value)
-    playSummary.linesOwned += linePurchaseDropdownValue
-    playSummary.totalSpent += linePurchaseDropdownValue * 0.7
-    playSummary.netProfit -= linePurchaseDropdownValue * 0.7
-    renderPlaySummary()
-})
-
 const shuffleButton = document.querySelector('.shuffle-button')
 shuffleButton.addEventListener('click', event => {
     event.preventDefault()
@@ -260,6 +250,7 @@ playButton.addEventListener('click', event => {
         
         playSummary.linesOwned -= 1
         playSummary.linesPlayed += 1
+        if(playSummary.linesOwned <= 0) playButton.classList.add('disabled-button')
 
         const line = generateLottoLine()
         renderPlayerNumbers(line)
@@ -276,7 +267,19 @@ playButton.addEventListener('click', event => {
         renderOutcome(division)
         renderPlaySummary()
     }
-    console.log(playSummary)
+})
+
+const buyButton = document.querySelector('.buy-button')
+buyButton.addEventListener('click', event => {
+    event.preventDefault()
+
+    playButton.classList.remove('disabled-button')
+
+    const linePurchaseDropdownValue = parseInt(document.querySelector('#line-purchase-dropdown').value)
+    playSummary.linesOwned += linePurchaseDropdownValue
+    playSummary.totalSpent += linePurchaseDropdownValue * 0.7
+    playSummary.netProfit -= linePurchaseDropdownValue * 0.7
+    renderPlaySummary()
 })
 
 renderPlaySummary()

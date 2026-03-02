@@ -103,14 +103,32 @@ aside {
 }
 
 button {
-  padding: 7px 20px 7px 20px;
+  padding: 5px 20px 5px 20px;
   border-radius: 25px;
   color: white;
   background-color: var(--lotto-orange);
   border-style: none;
+  font-weight: bold;
+  transition-duration: 0.3s;
+  border: 2px solid transparent; /* reserve the space on hover */
 }
 
-button:hover, select:hover {
+button:hover {
+  cursor: pointer;
+  color: white;
+  background-color: var(--lotto-purple);
+  border-color: white;
+}
+
+.disabled-button {
+  color: white !important;
+  background-color: var(--lotto-orange) !important;
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  border: 2px solid transparent !important;
+}
+
+select:hover {
   cursor: pointer;
   opacity: 0.5;
 }
