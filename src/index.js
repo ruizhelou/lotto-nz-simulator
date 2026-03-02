@@ -59,29 +59,65 @@ class Division {
     }
 }
 
+class OutcomeResponse {
+    zeroMatch = {index: 0, messages: ['0 Hits','Nothing Landed','No Matches','Clean Miss']}
+    oneMatch = {index: 0, messages: ['Just 1 Match','A Single Hit','Lone Number']}
+    twoMatch = {index: 0, messages: ['Two Strong','Two\'s Company','A Respectable Pair']}
+    threeMatch = {index: 0, messages: ['Three Hits','Triple Match','Three Solid']}
+    fourMatch = {index: 0, messages: ['Serious Four','Four Deep','Four Locked In']}
+    fiveMatch = {index: 0, messages: ['Five Huge','Massive Five','So Close']}
+    sixMatch = {index: 0, messages: ['LOTTO!']}
+
+    responseFrom(responses) {
+        if(responses.index < responses.messages.length) {
+            return responses.messages[responses.index++]
+        }
+        responses.index = 0
+        return responses.messages[responses.index++]
+    }
+
+    getResponse(numMatching) {
+        if(numMatching === 0) return this.responseFrom(this.zeroMatch)
+        else if(numMatching === 1) return this.responseFrom(this.oneMatch)
+        else if(numMatching === 2) return this.responseFrom(this.twoMatch)
+        else if(numMatching === 3) return this.responseFrom(this.threeMatch)
+        else if(numMatching === 4) return this.responseFrom(this.fourMatch)
+        else if(numMatching === 5) return this.responseFrom(this.fiveMatch)
+        else return this.responseFrom(this.sixMatch)
+    }
+}
+
+const outcomeResponses = new OutcomeResponse()
+
 function renderPlaySummary() {
-    const playSummaryDom = document.querySelector('.play-summary')
-    playSummaryDom.textContent = ''
+    const linesOwnedStat = document.querySelector('.lines-owned .statistic')
+    renderStatistic(linesOwnedStat, `${playSummary.linesOwned}`)
 
-    const linesOwnedDom = document.createElement('li')
-    linesOwnedDom.textContent = `Lines owned: ${playSummary.linesOwned}`
-    playSummaryDom.appendChild(linesOwnedDom)
-
-    const linesPlayedDom = document.createElement('li')
-    linesPlayedDom.textContent = `Lines played: ${playSummary.linesPlayed}`
-    playSummaryDom.appendChild(linesPlayedDom)
+    const linesPlayedDom = document.querySelector('.lines-played .statistic')
+    renderStatistic(linesPlayedDom, `${playSummary.linesPlayed}`)
     
-    const totalSpentDom = document.createElement('li')
-    totalSpentDom.textContent = `Total spent: $${playSummary.totalSpent.toFixed(2)}`
-    playSummaryDom.appendChild(totalSpentDom)
+    const totalSpentDom = document.querySelector('.total-spent .statistic')
+    renderStatistic(totalSpentDom, `$${playSummary.totalSpent.toFixed(2)}`)
 
-    const totalWonDom = document.createElement('li')
-    totalWonDom.textContent = `Total won: $${playSummary.totalWon.toFixed(2)}`
-    playSummaryDom.appendChild(totalWonDom)
+    const totalWonDom = document.querySelector('.total-won .statistic')
+    renderStatistic(totalWonDom, `$${playSummary.totalWon.toFixed(2)}`)
 
-    const netProfitDom = document.createElement('li')
-    netProfitDom.textContent = `Net profit: $${playSummary.netProfit.toFixed(2)}`
-    playSummaryDom.appendChild(netProfitDom)
+    const netProfitDom = document.querySelector('.net-profit .statistic')
+    renderStatistic(netProfitDom, `$${playSummary.netProfit.toFixed(2)}`)
+
+    if(playSummary.netProfit === 0) netProfitDom.style.color = 'white'
+    else if(playSummary.netProfit < 0) netProfitDom.style.color = '#ffb8b8'
+    else if(playSummary.netProfit > 0) netProfitDom.style.color = '#6aff6a'
+}
+
+function renderStatistic(statisticDom, newStat) {
+    if(statisticDom.textContent !== newStat) {
+        statisticDom.classList.remove('in-view')
+        statisticDom.textContent = newStat
+        requestAnimationFrame(() => {
+            statisticDom.classList.add('in-view')
+        })
+    }
 }
 
 function renderPlayerNumbers(numbers) {
@@ -146,34 +182,20 @@ function renderWinningNumbers(numbers) {
 
 function renderOutcome(division) {
     const outcome = document.querySelector('.outcome')
-    outcome.textContent = ''
+    const outcomeTitle = document.querySelector('.outcome h2')
+    const outcomeFraction = document.querySelector('.outcome-fraction')
 
-    const outcomeTitle = document.createElement('h2')
-    const outcomeDetails = document.createElement('ol')
+    outcomeTitle.classList.remove('in-view')
+    outcomeFraction.classList.remove('in-view')
 
-    const outcomePrize = document.createElement('li')
-    const outcomeDivision = document.createElement('li')
-    const outcomeNumbersMatch = document.createElement('li')
-    const outcomeIsBonusBall = document.createElement('li')
-    outcomeDetails.appendChild(outcomePrize)
-    outcomeDetails.appendChild(outcomeDivision)
-    outcomeDetails.appendChild(outcomeNumbersMatch)
-    outcomeDetails.appendChild(outcomeIsBonusBall)
-
-    if(division.number === null) {
-        outcomeTitle.textContent = 'No win this time'
-        outcomeDivision.textContent = `Division:`
-    } else {
-        outcomeTitle.textContent = 'You won!'
-        outcomeDivision.textContent = `Division: ${division.number}`
-    }
-    const prize = division.prize.type === 'money' ? `$${division.prize.amount.toFixed(2)}` : `${division.prize.amount} Lotto lines`
-    outcomePrize.textContent = `Prize: ${prize}`
-    outcomeNumbersMatch.textContent = `Numbers matched: ${division.numbersMatched}`
-    outcomeIsBonusBall.textContent = `Bonus ball matched: ${division.isBonusMatched}`
+    outcomeTitle.textContent = outcomeResponses.getResponse(division.numbersMatched)
+    outcomeFraction.textContent = `${division.numbersMatched}/7`
     
-    outcome.appendChild(outcomeTitle)
-    outcome.appendChild(outcomeDetails)
+    requestAnimationFrame(() => {
+        outcome.classList.add('in-view')
+        outcomeTitle.classList.add('in-view')
+        outcomeFraction.classList.add('in-view')
+    })
 }
 
 const buyButton = document.querySelector('.buy-button')
@@ -208,6 +230,8 @@ playButton.addEventListener('click', event => {
         renderPlayerNumbers(line)
         
         const division = calculateDivison(line, winningNumbers)
+        console.log(division)
+
         if(division.prize.type === 'money') {
             playSummary.totalWon += division.prize.amount
             playSummary.netProfit += division.prize.amount
@@ -217,6 +241,7 @@ playButton.addEventListener('click', event => {
         renderOutcome(division)
         renderPlaySummary()
     }
+    console.log(playSummary)
 })
 
 renderPlaySummary()
