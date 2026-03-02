@@ -197,6 +197,7 @@ function renderOutcome(division) {
         } else { // lines
             outcomePrize.textContent = `${division.prize.amount} Lines`
         }
+        pop(outcomePrize, 500)
     }
     outcomeFraction.textContent = `${division.numbersMatched}/6`
     
@@ -220,6 +221,20 @@ function shake(domElement, milliseconds) {
             { transform: 'translate(-1px, -1px) rotate(1deg)' },
             { transform: 'translate(1px, 2px) rotate(0deg)' },
             { transform: 'translate(1px, -2px) rotate(-1deg)' }
+        ], 
+        {
+            // Timing options
+            duration: milliseconds,
+            iterations: 1
+        }
+    )
+}
+
+function pop(domElement, milliseconds) {
+    domElement.animate([
+            { transform: 'scale3d(1, 1, 1)' },
+            { transform: 'scale3d(1.2, 1.2, 1.2)' },
+            { transform: 'scale3d(1, 1, 1)' }
         ], 
         {
             // Timing options
@@ -254,8 +269,10 @@ playButton.addEventListener('click', event => {
 
         const line = generateLottoLine()
         renderPlayerNumbers(line)
+        // renderPlayerNumbers(winningNumbers)
         
         const division = calculateDivison(line, winningNumbers)
+        // const division = calculateDivison(winningNumbers, winningNumbers)
         console.log(division)
 
         if(division.prize.type === 'money') {
