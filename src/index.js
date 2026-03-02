@@ -245,6 +245,7 @@ playButton.addEventListener('click', event => {
     for(let i = 0; i < linesToPlay; i++) {
         if(playSummary.linesOwned <= 0) {
             shake(document.querySelector('.lines-owned'))
+            shake(buyButton)
             return
         }
         
