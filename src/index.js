@@ -8,7 +8,14 @@ const playSummary = {
     totalWon: 0,
     netProfit: 0
 }
-let winningNumbers = generateLottoLine();
+let winningNumbers = generateLottoLine()
+const moneyFormatter = new Intl.NumberFormat('en-AU', {
+  style: 'currency',
+  currency: 'AUD',
+  currencyDisplay: 'narrowSymbol', // Removes 'A' prefix
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
+});
 
 function generateLottoLine() {
     // Create an array with numbers 1 through 40
@@ -59,35 +66,23 @@ class Division {
     }
 }
 
-class OutcomeResponse {
-    zeroMatch = {index: 0, messages: ['0 Hits','Nothing Landed','No Matches','Clean Miss']}
-    oneMatch = {index: 0, messages: ['Just 1 Match','A Single Hit','Lone Number']}
-    twoMatch = {index: 0, messages: ['Two Strong','Two\'s Company','A Respectable Pair']}
-    threeMatch = {index: 0, messages: ['Three Hits','Triple Match','Three Solid']}
-    fourMatch = {index: 0, messages: ['Serious Four','Four Deep','Four Locked In']}
-    fiveMatch = {index: 0, messages: ['Five Huge','Massive Five','So Close']}
-    sixMatch = {index: 0, messages: ['LOTTO!']}
-
-    responseFrom(responses) {
-        if(responses.index < responses.messages.length) {
-            return responses.messages[responses.index++]
-        }
-        responses.index = 0
-        return responses.messages[responses.index++]
-    }
-
-    getResponse(numMatching) {
-        if(numMatching === 0) return this.responseFrom(this.zeroMatch)
-        else if(numMatching === 1) return this.responseFrom(this.oneMatch)
-        else if(numMatching === 2) return this.responseFrom(this.twoMatch)
-        else if(numMatching === 3) return this.responseFrom(this.threeMatch)
-        else if(numMatching === 4) return this.responseFrom(this.fourMatch)
-        else if(numMatching === 5) return this.responseFrom(this.fiveMatch)
-        else return this.responseFrom(this.sixMatch)
-    }
-}
-
-const outcomeResponses = new OutcomeResponse()
+const loseResponses = [
+    'No Prize This Time',
+    'Not a Winner',
+    'No Win Today',
+    'Better Luck Next Draw',
+    'Unlucky This Round',
+    'No Luck This Time',
+    'No Payout',
+    'Try Again',
+    'The Dream Continues',
+    'Close… Ish',
+    'Fortune Looked Away',
+    'Not Today',
+    'Luck Took a Break',
+    'The Stars Misaligned',
+    'Maybe Next Time'
+]
 
 function renderPlaySummary() {
     const linesOwnedStat = document.querySelector('.lines-owned .statistic')
@@ -97,13 +92,13 @@ function renderPlaySummary() {
     renderStatistic(linesPlayedDom, `${playSummary.linesPlayed}`)
     
     const totalSpentDom = document.querySelector('.total-spent .statistic')
-    renderStatistic(totalSpentDom, `$${playSummary.totalSpent.toFixed(2)}`)
+    renderStatistic(totalSpentDom, `${moneyFormatter.format(playSummary.totalSpent)}`)
 
     const totalWonDom = document.querySelector('.total-won .statistic')
-    renderStatistic(totalWonDom, `$${playSummary.totalWon.toFixed(2)}`)
+    renderStatistic(totalWonDom, `${moneyFormatter.format(playSummary.totalWon)}`)
 
     const netProfitDom = document.querySelector('.net-profit .statistic')
-    renderStatistic(netProfitDom, `$${playSummary.netProfit.toFixed(2)}`)
+    renderStatistic(netProfitDom, `${moneyFormatter.format(playSummary.netProfit)}`)
 
     if(playSummary.netProfit === 0) netProfitDom.style.color = 'white'
     else if(playSummary.netProfit < 0) netProfitDom.style.color = '#ffb8b8'
@@ -184,12 +179,26 @@ function renderOutcome(division) {
     const outcome = document.querySelector('.outcome')
     const outcomeTitle = document.querySelector('.outcome h2')
     const outcomeFraction = document.querySelector('.outcome-fraction')
+    const outcomePrize = document.querySelector('.outcome-prize')
 
     outcomeTitle.classList.remove('in-view')
     outcomeFraction.classList.remove('in-view')
 
-    outcomeTitle.textContent = outcomeResponses.getResponse(division.numbersMatched)
-    outcomeFraction.textContent = `${division.numbersMatched}/7`
+    if(division.prize.amount === 0) {
+        outcomeTitle.textContent = loseResponses[Math.floor(Math.random() * loseResponses.length)]
+        outcomeTitle.style.color = 'white'
+        outcomePrize.style.display = 'none'
+    } else {
+        outcomeTitle.textContent = 'Winning ticket!'
+        outcomeTitle.style.color = '#f8f333'
+        outcomePrize.style.display = 'flex'
+        if(division.prize.type === 'money') {
+            outcomePrize.textContent = `${moneyFormatter.format(division.prize.amount)}`
+        } else { // lines
+            outcomePrize.textContent = `${division.prize.amount} Lines`
+        }
+    }
+    outcomeFraction.textContent = `${division.numbersMatched}/6`
     
     requestAnimationFrame(() => {
         outcome.classList.add('in-view')
@@ -198,7 +207,7 @@ function renderOutcome(division) {
     })
 }
 
-function shake(domElement) {
+function shake(domElement, milliseconds) {
     domElement.animate([
             { transform: 'translate(1px, 1px) rotate(0deg)' },
             { transform: 'translate(-1px, -2px) rotate(-1deg)' },
@@ -214,7 +223,7 @@ function shake(domElement) {
         ], 
         {
             // Timing options
-            duration: 500, // milliseconds
+            duration: milliseconds,
             iterations: 1
         }
     )
@@ -244,8 +253,8 @@ playButton.addEventListener('click', event => {
     const linesToPlay = parseInt(document.querySelector('#line-play-dropdown').value)
     for(let i = 0; i < linesToPlay; i++) {
         if(playSummary.linesOwned <= 0) {
-            shake(document.querySelector('.lines-owned'))
-            shake(buyButton)
+            shake(document.querySelector('.lines-owned'), 500)
+            shake(buyButton, 500)
             return
         }
         
