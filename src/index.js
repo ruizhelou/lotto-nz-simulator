@@ -198,6 +198,28 @@ function renderOutcome(division) {
     })
 }
 
+function shake(domElement) {
+    domElement.animate([
+            { transform: 'translate(1px, 1px) rotate(0deg)' },
+            { transform: 'translate(-1px, -2px) rotate(-1deg)' },
+            { transform: 'translate(-3px, 0px) rotate(1deg)' },
+            { transform: 'translate(3px, 2px) rotate(0deg)' },
+            { transform: 'translate(1px, -1px) rotate(1deg)' },
+            { transform: 'translate(-1px, 2px) rotate(-1deg)' },
+            { transform: 'translate(-3px, 1px) rotate(0deg)' },
+            { transform: 'translate(3px, 1px) rotate(-1deg)' },
+            { transform: 'translate(-1px, -1px) rotate(1deg)' },
+            { transform: 'translate(1px, 2px) rotate(0deg)' },
+            { transform: 'translate(1px, -2px) rotate(-1deg)' }
+        ], 
+        {
+            // Timing options
+            duration: 500, // milliseconds
+            iterations: 1
+        }
+    )
+}
+
 const buyButton = document.querySelector('.buy-button')
 buyButton.addEventListener('click', event => {
     event.preventDefault()
@@ -221,7 +243,10 @@ playButton.addEventListener('click', event => {
 
     const linesToPlay = parseInt(document.querySelector('#line-play-dropdown').value)
     for(let i = 0; i < linesToPlay; i++) {
-        if(playSummary.linesOwned <= 0) return
+        if(playSummary.linesOwned <= 0) {
+            shake(document.querySelector('.lines-owned'))
+            return
+        }
         
         playSummary.linesOwned -= 1
         playSummary.linesPlayed += 1
