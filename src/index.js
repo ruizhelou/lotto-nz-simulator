@@ -263,6 +263,27 @@ function rotate(domElement, startingAngle, milliseconds) {
     )
 }
 
+function playOneRound() {
+    if(playSummary.linesOwned <= 0) {
+        return null
+    }
+    
+    playSummary.linesOwned -= 1
+    playSummary.linesPlayed += 1
+
+    const line = generateLottoLine()
+    const division = calculateDivison(line, winningNumbers)
+
+    if(division.prize.type === 'money') {
+        playSummary.totalWon += division.prize.amount
+        playSummary.netProfit += division.prize.amount
+    } else if(division.prize.type === 'line') {
+        playSummary.linesOwned += division.prize.amount
+    }
+
+    return { line: line, division: division }
+}
+
 const shuffleButton = document.querySelector('.shuffle-button')
 shuffleButton.addEventListener('click', event => {
     event.preventDefault()
@@ -270,45 +291,67 @@ shuffleButton.addEventListener('click', event => {
     renderWinningNumbers(winningNumbers)
 })
 
-const playButton = document.querySelector('.play-button')
-playButton.addEventListener('click', event => {
-    event.preventDefault()
+const playOneButton = document.querySelector('.play-one-button')
+playOneButton.addEventListener('click', () => {
+    if(playSummary.linesOwned <= 0) {
+        shake(document.querySelector('.lines-owned'), 500)
+        shake(buyButton, 500)
+        return
+    }
+    const outcome = playOneRound()
+    if(playSummary.linesOwned <= 0) {
+        playOneButton.classList.add('disabled-button')
+        playAllButton.classList.add('disabled-button')
+    }
+    renderPlayerNumbers(outcome.line)
+    renderOutcome(outcome.division)
+    renderPlaySummary()
+})
 
-    const linesToPlay = parseInt(document.querySelector('#line-play-dropdown').value)
-    for(let i = 0; i < linesToPlay; i++) {
-        if(playSummary.linesOwned <= 0) {
+const playAllButton = document.querySelector('.play-all-button')
+playAllButton.addEventListener('click', () => {
+    playAllRounds().then(outcome => {
+        if(outcome === null) {
             shake(document.querySelector('.lines-owned'), 500)
             shake(buyButton, 500)
-            return
+        } else {
+            renderPlayerNumbers(outcome.line)
+            renderOutcome(outcome.division)
+            renderPlaySummary()
+            playOneButton.classList.add('disabled-button')
+            playAllButton.classList.add('disabled-button')
         }
-        
-        playSummary.linesOwned -= 1
-        playSummary.linesPlayed += 1
-        if(playSummary.linesOwned <= 0) playButton.classList.add('disabled-button')
-
-        const line = generateLottoLine()
-        renderPlayerNumbers(line)
-        // renderPlayerNumbers(winningNumbers)
-        
-        const division = calculateDivison(line, winningNumbers)
-        // const division = calculateDivison(winningNumbers, winningNumbers)
-
-        if(division.prize.type === 'money') {
-            playSummary.totalWon += division.prize.amount
-            playSummary.netProfit += division.prize.amount
-        } else if(division.prize.type === 'line') {
-            playSummary.linesOwned += division.prize.amount
-        }
-        renderOutcome(division)
-        renderPlaySummary()
-    }
+    })
 })
+
+async function playAllRounds() {
+    const chunkSize = 10_000
+
+    return new Promise(resolve => {
+        function processChunk() {
+            let i = 0
+            let outcome = null
+            while (playSummary.linesOwned > 0 && i < chunkSize) {
+                outcome = playOneRound()
+                i++
+            }
+
+            if (playSummary.linesOwned > 0) {
+                setTimeout(processChunk, 0)
+            } else {
+                resolve(outcome)
+            }
+        }
+        processChunk()
+    })
+}
 
 const buyButton = document.querySelector('.buy-button')
 buyButton.addEventListener('click', event => {
     event.preventDefault()
 
-    playButton.classList.remove('disabled-button')
+    playOneButton.classList.remove('disabled-button')
+    playAllButton.classList.remove('disabled-button')
 
     const linePurchaseDropdownValue = parseInt(document.querySelector('#line-purchase-dropdown').value)
     playSummary.linesOwned += linePurchaseDropdownValue

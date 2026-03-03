@@ -43,20 +43,10 @@
       <div class="play-area">
         <section class="lotto-play card">
           <h2>Your Numbers</h2>
-          <form action="" method="POST" class="line-selector">
-            <button type="submit" class="play-button disabled-button">Play</button>
-            <select id="line-play-dropdown" name="line-play-dropdown" class="line-dropdown" aria-label="Select lotto line">
-              <option value="1">1 line</option>
-              <option value="4">4 lines</option>
-              <option value="8">8 lines</option>
-              <option value="10">10 lines</option>
-              <option value="15">15 lines</option>
-              <option value="20">20 lines</option>
-              <option value="100">100 lines</option>
-              <option value="100000">100,000 lines</option>
-              <option value="1000000">1,000,000 lines</option>
-            </select>
-          </form>
+          <div class="play-controls">
+            <button class="play-one-button disabled-button">Play One</button>
+            <button class="play-all-button disabled-button">Play All</button>
+          </div>
           <div class="ball-container">
             <div class="ball"></div>
             <div class="ball"></div>
