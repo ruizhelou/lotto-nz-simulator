@@ -130,7 +130,7 @@ function renderPlayerNumbers(numbers) {
             if(numbers[i] === winningNumbers[i]) {
                 ballColour = '#a92982' // pink
                 textColour = 'white'
-                requestAnimationFrame(() => { pop(ball, 500) })
+                requestAnimationFrame(() => { pop(ball, 1.2, 500) })
             } else {
                 ballColour = 'white'
                 textColour = '#a92982' // pink
@@ -139,7 +139,7 @@ function renderPlayerNumbers(numbers) {
             if(winningNumbers.slice(0, 6).includes(numbers[i])) {
                 ballColour = '#3d8fd6' // blue
                 textColour = 'white'
-                requestAnimationFrame(() => { pop(ball, 500) })
+                requestAnimationFrame(() => { pop(ball, 1.2, 500) })
             } else {
                 ballColour = 'white'
                 textColour = 'black'
@@ -201,7 +201,7 @@ function renderOutcome(division) {
         } else { // lines
             outcomePrize.textContent = `${division.prize.amount} Lines`
         }
-        pop(outcomePrize, 500)
+        pop(outcome, 1.1, 500)
     }
     outcomeFraction.textContent = `${division.numbersMatched}/6`
     
@@ -234,16 +234,17 @@ function shake(domElement, milliseconds) {
     )
 }
 
-function pop(domElement, milliseconds) {
+function pop(domElement, scale, milliseconds) {
     domElement.animate([
             { scale: 1 },
-            { scale: 1.2 },
+            { scale: scale },
             { scale: 1 }
         ], 
         {
             // Timing options
             duration: milliseconds,
-            iterations: 1
+            iterations: 1,
+            easing: 'ease'
         }
     )
 }
