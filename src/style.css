@@ -45,6 +45,12 @@ ul, ol {
   font-weight: normal;
 }
 
+.statistic.in-view {
+  opacity: 100%;
+  transform: translate(0);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
 header > img {
   width: 60px;
   padding-left: 10px;
@@ -120,12 +126,12 @@ button:hover {
   border-color: white;
 }
 
-.disabled-button {
-  color: white !important;
-  background-color: var(--lotto-orange) !important;
-  opacity: 0.6 !important;
-  cursor: not-allowed !important;
-  border: 2px solid transparent !important;
+button.disabled-button {
+  color: white;
+  background-color: var(--lotto-orange);
+  opacity: 0.6;
+  cursor: not-allowed;
+  border: 2px solid transparent;
 }
 
 select:hover {
@@ -151,14 +157,18 @@ select:hover {
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  transition: opacity 0.2s ease-in;
-  opacity: 0%;
   color: black;
   font-weight: bold;
   font-size: 1.3rem;
+  opacity: 0;
 
   border-style: solid;
   border-width: 3px;
+}
+
+.ball.in-view {
+  opacity: 100%;
+  transition: opacity 1s ease;
 }
 
 .bonus {
@@ -171,18 +181,18 @@ select:hover {
   margin-left: 10px;
 }
 
-.in-view {
-  opacity: 100% !important;
-  transform: translateY(0) !important;
-  transition: opacity 1s ease, transform 1s ease;
-}
-
 .outcome {
   display: flex;
   flex-direction: column;
   gap: 15px;
   opacity: 0%;
   transform: translateY(100%);
+}
+
+.outcome.in-view {
+  opacity: 100%;
+  transform: translate(0);
+  transition: opacity 1s ease, transform 1s ease;
 }
 
 .outcome-header {
@@ -194,9 +204,20 @@ select:hover {
   opacity: 0%;
 }
 
+.outcome-fraction.in-view {
+  opacity: 100%;
+  transition: opacity 1s ease;
+}
+
 .outcome h2 {
   opacity: 0%;
   transform: translateX(100px);
+}
+
+.outcome h2.in-view {
+  opacity: 100%;
+  transform: translate(0);
+  transition: opacity 1s ease, transform 1s ease;
 }
 
 .outcome-prize {

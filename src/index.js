@@ -130,6 +130,7 @@ function renderPlayerNumbers(numbers) {
             if(numbers[i] === winningNumbers[i]) {
                 ballColour = '#a92982' // pink
                 textColour = 'white'
+                requestAnimationFrame(() => { pop(ball, 500) })
             } else {
                 ballColour = 'white'
                 textColour = '#a92982' // pink
@@ -138,6 +139,7 @@ function renderPlayerNumbers(numbers) {
             if(winningNumbers.slice(0, 6).includes(numbers[i])) {
                 ballColour = '#3d8fd6' // blue
                 textColour = 'white'
+                requestAnimationFrame(() => { pop(ball, 500) })
             } else {
                 ballColour = 'white'
                 textColour = 'black'
@@ -147,16 +149,17 @@ function renderPlayerNumbers(numbers) {
         ball.style.color = textColour
         ball.style.borderColor = 'white'
 
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             ball.classList.add('in-view');
-        }, i * 100); // stagger each ball
+            rotate(ball, 180 * (Math.random() < 0.5 ? 1 : -1), 500)
+        })
     }
 }
 
 function renderWinningNumbers(numbers) {
-    const containerDom = document.querySelector('.lotto-result .ball-container')
+    const ballContainer = document.querySelector('.lotto-result .ball-container')
     for(let i = 0; i < numbers.length; i++) {
-        let ball = containerDom.children[i]
+        let ball = ballContainer.children[i]
         if(i === 6) ball = ball.children[0] // bonus ball
         ball.classList.remove('in-view')
         ball.textContent = numbers[i]
@@ -169,9 +172,10 @@ function renderWinningNumbers(numbers) {
         else if(numbers[i] <= 40) ballColour = '#d0393a' // red
         ball.style.borderColor = ballColour
 
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             ball.classList.add('in-view');
-        }, i * 100); // stagger each ball
+            rotate(ball, 180 * (Math.random() < 0.5 ? 1 : -1), 500)
+        })
     }
 }
 
@@ -232,14 +236,28 @@ function shake(domElement, milliseconds) {
 
 function pop(domElement, milliseconds) {
     domElement.animate([
-            { transform: 'scale3d(1, 1, 1)' },
-            { transform: 'scale3d(1.2, 1.2, 1.2)' },
-            { transform: 'scale3d(1, 1, 1)' }
+            { scale: 1 },
+            { scale: 1.2 },
+            { scale: 1 }
         ], 
         {
             // Timing options
             duration: milliseconds,
             iterations: 1
+        }
+    )
+}
+
+function rotate(domElement, startingAngle, milliseconds) {
+    domElement.animate([
+            { transform: `rotate(${startingAngle}deg)` },
+            { transform: 'rotate(0deg)' }
+        ], 
+        {
+            // Timing options
+            duration: milliseconds,
+            iterations: 1,
+            easing: 'ease-out'
         }
     )
 }
@@ -273,7 +291,6 @@ playButton.addEventListener('click', event => {
         
         const division = calculateDivison(line, winningNumbers)
         // const division = calculateDivison(winningNumbers, winningNumbers)
-        console.log(division)
 
         if(division.prize.type === 'money') {
             playSummary.totalWon += division.prize.amount
