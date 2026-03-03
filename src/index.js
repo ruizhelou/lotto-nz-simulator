@@ -8,7 +8,9 @@ const playSummary = {
     totalWon: 0,
     netProfit: 0
 }
+
 let winningNumbers = generateLottoLine()
+
 const moneyFormatter = new Intl.NumberFormat('en-AU', {
   style: 'currency',
   currency: 'AUD',
@@ -16,6 +18,8 @@ const moneyFormatter = new Intl.NumberFormat('en-AU', {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2
 });
+
+let uiDisabled = false
 
 function generateLottoLine() {
     // Create an array with numbers 1 through 40
@@ -285,14 +289,15 @@ function playOneRound() {
 }
 
 const shuffleButton = document.querySelector('.shuffle-button')
-shuffleButton.addEventListener('click', event => {
-    event.preventDefault()
+shuffleButton.addEventListener('click', () => {
+    if(uiDisabled) return
     winningNumbers = generateLottoLine()
     renderWinningNumbers(winningNumbers)
 })
 
 const playOneButton = document.querySelector('.play-one-button')
 playOneButton.addEventListener('click', () => {
+    if(uiDisabled) return
     if(playSummary.linesOwned <= 0) {
         shake(document.querySelector('.lines-owned'), 500)
         shake(buyButton, 500)
@@ -310,7 +315,14 @@ playOneButton.addEventListener('click', () => {
 
 const playAllButton = document.querySelector('.play-all-button')
 playAllButton.addEventListener('click', () => {
+    if(uiDisabled) return
+    enableUi(false)
+
+    // numbers and stats loading animation
+    // add loading bar
+
     playAllRounds().then(outcome => {
+        enableUi(true)
         if(outcome === null) {
             shake(document.querySelector('.lines-owned'), 500)
             shake(buyButton, 500)
@@ -318,11 +330,26 @@ playAllButton.addEventListener('click', () => {
             renderPlayerNumbers(outcome.line)
             renderOutcome(outcome.division)
             renderPlaySummary()
-            playOneButton.classList.add('disabled-button')
-            playAllButton.classList.add('disabled-button')
         }
+        playOneButton.classList.add('disabled-button')
+        playAllButton.classList.add('disabled-button')
     })
 })
+
+function enableUi(enable) {
+    uiDisabled = !enable
+    if(enable) {
+        playOneButton.classList.remove('disabled-button')
+        playAllButton.classList.remove('disabled-button')
+        buyButton.classList.remove('disabled-button')
+        shuffleButton.classList.remove('disabled-button')
+    } else {
+        playOneButton.classList.add('disabled-button')
+        playAllButton.classList.add('disabled-button')
+        buyButton.classList.add('disabled-button')
+        shuffleButton.classList.add('disabled-button')
+    }
+}
 
 async function playAllRounds() {
     const chunkSize = 10_000
@@ -349,7 +376,7 @@ async function playAllRounds() {
 const buyButton = document.querySelector('.buy-button')
 buyButton.addEventListener('click', event => {
     event.preventDefault()
-
+    if(uiDisabled) return
     playOneButton.classList.remove('disabled-button')
     playAllButton.classList.remove('disabled-button')
 
