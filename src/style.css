@@ -17,20 +17,33 @@
 }
 
 h1, h2 {
-  all: unset;
   font-weight: bold;
+}
+
+header {
+  color: white;
+  background-color: var(--lotto-purple);
+  padding: 20px;
+}
+
+.heading-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: center;
+}
+
+.main-heading, .sub-heading {
+  margin: 0px;
+  padding: 0px;
+}
+
+.main-heading {
+  font-size: 2rem;
+}
+
+.sub-heading {
   font-size: 1.4rem;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  margin-right: auto;
-}
-
-h2 {
-  border-color: white;
-}
-
-h1 {
-  border-color: black;
 }
 
 ul, ol {
@@ -51,15 +64,10 @@ ul, ol {
   transition: opacity 1s ease, transform 1s ease;
 }
 
-header > img {
+.icon {
   width: 60px;
   padding-left: 10px;
   padding-right: 10px;
-}
-
-.icon {
-  width: 15px;
-  filter: brightness(0) invert(1); /* Make it white */
 }
 
 header {
@@ -94,10 +102,6 @@ aside {
   display: flex;
   flex-direction: column;
   gap: 15px;
-}
-
-.result-header {
-  display: flex;
 }
 
 .card {
@@ -186,16 +190,6 @@ select:hover {
   margin-left: 10px;
 }
 
-.spin {
-  animation: spin 1s linear;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  50% { transform: rotate(180deg) scale(1.1); }
-  100% { transform: rotate(360deg) scale(1); }
-}
-
 .outcome {
   display: flex;
   flex-direction: column;
@@ -212,6 +206,7 @@ select:hover {
 
 .outcome-header {
   display: flex;
+  justify-content: space-between;
 }
 
 .outcome-fraction {

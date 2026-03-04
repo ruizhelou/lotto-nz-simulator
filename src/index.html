@@ -6,17 +6,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <title>Lotto Simulator</title>
+    <title>Lotto NZ Simulator</title>
   </head>
   <body>
     <header>
-      <h1>Lotto Simulator</h1>
-      <img src="./icons/lotto.png" alt="Lotto icon">
+      <img src="./icons/alms.png" class="icon" alt="">
+      <div class="heading-wrapper">
+        <h1 class="main-heading">Lotto New Zealand</h1>
+        <h2 class="sub-heading">Simulator</h2>
+      </div>
     </header>
 
     <main class="main-content">
       <aside class="card">
-        <h2>Play Summary</h2>
+        <h2 class="sub-heading">Play Summary</h2>
         <ul class="play-summary">
           <li class="lines-owned">Lines owned: <span class="statistic"></span></li>
           <li class="lines-played">Lines played: <span class="statistic"></span></li>
@@ -42,7 +45,7 @@
       
       <div class="play-area">
         <section class="lotto-play card">
-          <h2>Your Numbers</h2>
+          <h2 class="sub-heading">Your Numbers</h2>
           <div class="play-controls">
             <button class="play-one-button disabled-button">Play One</button>
             <button class="play-all-button disabled-button">Play All</button>
@@ -59,8 +62,8 @@
         </section>
 
         <section class="lotto-result card">
-          <div class="result-header">
-            <h2>Winning Numbers</h2>
+          <h2 class="sub-heading">Winning Numbers</h2>
+          <div class="play-controls">
             <button class="shuffle-button">Shuffle</button>
           </div>
           
@@ -77,7 +80,7 @@
 
         <section class="outcome card">
           <div class="outcome-header">
-            <h2></h2>
+            <h2 class="sub-heading"></h2>
             <div class="outcome-fraction"></div>
           </div>
           <div class="outcome-prize"></div>
