@@ -205,9 +205,12 @@ function renderOutcome(division) {
         } else { // lines
             outcomePrize.textContent = `${division.prize.amount} Lines`
         }
-        pop(outcome, 1.1, 500)
+        requestAnimationFrame(() => {
+            outcome.classList.add('tada')
+        })
     }
     outcomeFraction.textContent = `${division.numbersMatched}/6`
+    outcome.classList.remove('tada')
     
     requestAnimationFrame(() => {
         outcome.classList.add('in-view')
@@ -318,8 +321,11 @@ playAllButton.addEventListener('click', () => {
     if(uiDisabled) return
     enableUi(false)
 
-    // numbers and stats loading animation
-    // add loading bar
+    const outcomeTitle = document.querySelector('.outcome h2')
+    if(playSummary.linesOwned > 0) {
+        outcomeTitle.textContent = 'Calculating...'
+        outcomeTitle.classList.add('pulse-shadow')
+    }
 
     playAllRounds().then(outcome => {
         enableUi(true)
@@ -333,6 +339,7 @@ playAllButton.addEventListener('click', () => {
         }
         playOneButton.classList.add('disabled-button')
         playAllButton.classList.add('disabled-button')
+        outcomeTitle.classList.remove('pulse-shadow')
     })
 })
 
